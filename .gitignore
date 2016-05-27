@@ -1,0 +1,48 @@
+##############EJERCICIO###################
+######1.-Elejir una serie de tiempo###########
+######2.-Aplicar fn autoarima(3,1,0)
+######3.-Aplicar fn arima(p,q,d)con dos modelos diferentes al que genere la fn autoarima######
+######3.1.-Generar los pronosticos de los 3 modelos
+######4.-Generar una grafica con los valores reales y los valores ajustados de los 3 modelos
+######5.-Generar grafica con los valores reales y los valores ajustados y pronosticados en los 3 modelos
+######numero de modelos 4###########
+install.packages("fpp")
+require("fpp")
+am<- read.csv("C:\\Users\\SALA-C26\\Downloads\\amazon.csv",header = FALSE)
+amt<-ts(am [,2], start = 2000, frequency = 12)
+M1<-auto.arima(amt, seasonal = FALSE)
+M1
+
+####Autorregresivo con diferenciacion 1
+####.8790t-1
+####
+M2<-arima(amt,order = c(0,1,2))
+M2
+#######Pronosticos################
+require(forecast)
+pronostico1<-forecast
+
+Pronosticos1<-forecast(M1, h=4)
+Pronosticos1
+plot(Pronosticos1)
+Pronosticos2<-forecast(M2, h=4)
+Pronosticos2
+plot(Pronosticos2)
+
+M3<-arima(amt, order = c(1,2,1))
+M3
+Pronosticos3<-forecast(M3, h=4)
+Pronosticos3
+plot(Pronosticos3)
+
+plot(amt,plot.conf=FALSE, ylab="tasas", xlab="Año", main=" ", fcol="white", type="o")
+lines(fitted(amt), col="blue", type="o")
+lines(fitted(M1), col="red", type="o")
+lines(fitted(M2), col="green", type="o")
+lines(fitted(M3), col="pink", type="o")
+lines(Pronosticos1$mean, col="blue", type="o")
+lines(Pronosticos2$mean, col="red", type="o")
+lines(Pronosticos3$mean, col="green", type="o")
+legend("topleft",lty=1, col=c(1,"blue","red","green"), 
+       c("data", expression(alpha == 0.1), expression(alpha == 0.6),
+         expression(alpha == .9)), pch=1)
